@@ -1,0 +1,12 @@
+module.exports = {
+    AUTH: 1,
+    CONFIRM_EMAIL: 2,
+    RESET_PASS: 3,
+    FORGOT_PASSWORD: 4,
+    SUCCESS_REG: 5,
+    ACCOUNT_BLOCKED: 6,
+    ACCOUNT_UNBLOCKED: 7,
+    CREATE_USER: 8,
+    UPDATE_USER: 9,
+    DELETE_USER: 10,
+};
