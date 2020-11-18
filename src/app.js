@@ -26,6 +26,7 @@ const {
 } = require('./configs');
 const {errors} = require('./errors');
 const {winstonLogger} = require('./loggers');
+const {apiRouter, notFoundRouter} = require('./routes');
 
 const app = express();
 
@@ -36,8 +37,10 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.use('/api', apiRouter);
+app.use('*', notFoundRouter);
+
 initDBAssociations();
-//TODO ROUTES
 
 app.use((err, req, res, next) => {
     winstonLogger.error({
@@ -50,10 +53,6 @@ app.use((err, req, res, next) => {
     next(err);
 });
 app.use((err, req, res, next) => {
-    if (err.parent) {
-        err.message = err.parent.sqlMessage;
-    }
-
     res
         .status(err.status || ResponseStatusCodeEnum.SERVER_ERROR)
         .json({
@@ -61,6 +60,5 @@ app.use((err, req, res, next) => {
             code: err.code || errors.SERVER_UNKNOWN_ERROR.code
         });
 });
-
 
 module.exports = app;
