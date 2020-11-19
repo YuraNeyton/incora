@@ -6,6 +6,7 @@ const {
     }
 } = require('../constants');
 const {userService} = require('../services');
+const io = require('../index');
 
 class UserController {
 
@@ -25,7 +26,11 @@ class UserController {
         try {
             const {id} = req.user;
 
-            await userService.update(id, req.body);
+            const [successUpdate] = await userService.update(id, req.body);
+
+            if (successUpdate) {
+                io.emit('notifications', `User with id: ${id} updated`);
+            }
 
             res.status(ResponseStatusCodeEnum.CREATED).end();
 
@@ -62,7 +67,7 @@ class UserController {
 
     getById(req, res, next) {
         try {
-            const user = req.user ;
+            const user = req.user;
 
             res.json({
                 data: user
